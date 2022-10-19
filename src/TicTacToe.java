@@ -1,10 +1,14 @@
+/*Name: Surya T
+Class: ICS3U7
+Date: Oct.15, 2022
+Program: Generates a 3x3 box and asks user where to put x
+ */
 import java.util.*;
 public class TicTacToe {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         char array[][] = new char[3][3];
         int xaxis, yaxis;
-        String move[] = new String[2];
         for (int i = 0; i <= 2; i++) {
             for (int j = 0; j <= 2; j++) {
                 array[i][j] = '.';

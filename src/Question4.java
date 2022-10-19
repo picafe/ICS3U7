@@ -1,3 +1,8 @@
+/*Name: Surya T
+Class: ICS3U7
+Date: idk
+Program: idk
+ */
 public class Question4 {
     public static void main(String[] args) {
         double total_money = 2069;
