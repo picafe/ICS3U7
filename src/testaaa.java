@@ -1,19 +1,19 @@
+import java.io.*;
 import java.util.*;
 public class testaaa {
-    public static void main(String[] args) {
-        String str = notReplace("This is right");
-        System.out.println(str);
-    }
-    public static String notReplace(String str) {
-        str = " " + str + " ";
-        for (int i = 1; i < str.length()-1; i++) {
-            if (str.substring(i, i+2).equals("is")  && !Character.isLetter(str.charAt(i + 2)) && !Character.isLetter(str.charAt(i - 1))) {
-                str = str.substring(0, i) + "is not" + str.substring(i+2);
-            }
+    public static void main(String[] args) throws FileNotFoundException {
+        ArrayList<String> jokes = new ArrayList<String>();
+        String tmp = "";
+        Scanner scFile = new Scanner(new File("C:\\Users\\Surya\\IdeaProjects\\ICS3U7\\src\\jokes.txt"));
+        while (scFile.hasNext()) {
+            tmp = scFile.nextLine();
+            jokes.add(tmp);
         }
-        return str.substring(1, str.length() - 1);
+        Collections.shuffle(jokes);
     }
 }
+
+
 
 
 
