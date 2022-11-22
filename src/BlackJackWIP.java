@@ -44,7 +44,9 @@ class Player {
         if (total > 21 && aces == 1)
             total -= 10;
         else if (total > 21 && aces == 2) {
-            total -= 20;
+            total -= 10;
+            if (total > 21)
+                total -=10;
         }
         return total;
     }
