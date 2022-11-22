@@ -3,63 +3,77 @@ import java.util.*;
 public class BlackJackWIP {
     public static void main(String[] args) throws Exception {
         Deck deck = new Deck();
+        Player bob = new Player("Bob");
         deck.loadCards();
-        System.out.println(deck.toString());
-        System.out.println(deck.toAString(deck.getCards()));
-        deck.shuffleCards();
-        System.out.println(deck.toAString(deck.getCards()));
-        System.out.println(deck.toString());
-        System.out.println(deck.dealCard());
-        System.out.println(deck.dealCard());
-        System.out.println(deck.dealCard());
-        System.out.println(deck.dealCard());
+        System.out.println(deck);
 
-        System.out.println(deck.toAString(deck.getCards()));
+        deck.shuffleCards();
+
+        System.out.println(deck);
+        bob.getCard(deck.dealCard());
+        bob.getCard(deck.dealCard());
+        bob.getCard(deck.dealCard());
+
+        System.out.println(bob);
+
+        System.out.println(deck.toString());
         System.out.println(Jokes.nextJoke());
 
     }
 }
 
 class Player {
-    ArrayList<Integer> cards = new ArrayList<Integer>();
+    private ArrayList<Integer> cards = new ArrayList<Integer>();
+    private String name;
 
-    public ArrayList<Integer> getCards() {
-        return cards;
+    public Player(String theName) {
+        name = theName;
     }
 
-//    public String toString() {
-//        for (int i = 0; i < cards.size(); i++) {
-//            String out = Integer.toString(cards.get(i) % 13);
-//            // adding exceptions for cards that are not numbers
-//            if (out.equals("1"))
-//                out = "A";
-//            else if (out.equals("11"))
-//                out = "J";
-//            else if (out.equals("12"))
-//                out = "Q";
-//            else if (out.equals("0"))
-//                out = "K";
-//
-//            // adding the card symbol
-//            if (num / 13 == 0)
-//                out += "♣";
-//            else if (num / 13 == 1)
-//                out += "♦";
-//            else if (num / 13 == 2)
-//                out += "♥";
-//            else
-//                out += "♠";
-//        }
-//
-//        return out;
-//    }
-
-    public void addCard(int card) {
+    public void getCard(int card) {
         cards.add(card);
     }
+
+    public int getTotal() {
+        int total = 0, aces = 0;
+        for (int i = 0; i < cards.size(); i++) {
+            if (Deck.cardToValue(cards.get(i)) == 11)
+                aces++;
+            total += Deck.cardToValue(cards.get(i));
+        }
+        if (total > 21 && aces == 1)
+            total -= 10;
+        else if (total > 21 && aces == 2) {
+            total -= 20;
+        }
+        return total;
+    }
+
+    public String getHands() {
+        String out = "";
+        for (int i = 0; i < cards.size(); i++) {
+            out += Deck.cardToString(cards.get(i)) + " ";
+        }
+        return out;
+    }
+
+    public String toString() {
+        return name + "'s Hand:   " + getHands() + "\tsum: " + getTotal();
+    }
+
+class Dealer extends Player {
+
+    public Dealer(String theName) {
+        super(theName);
+    }
+
+}
+
+
 }
 class Deck {
     private int cards[];
+    private int numCards = 52;
     public void loadCards() {
         cards = new int[52];
         for (int i = 0; i < 52; i++) {
@@ -69,9 +83,6 @@ class Deck {
 
     public int[] getCards() {
         return cards;
-    }
-    public String toString() {
-        return Arrays.toString(cards);
     }
 
     public void shuffleCards() {
@@ -86,32 +97,26 @@ class Deck {
 
     public int dealCard() {
         int out = -1;
-        for (int i = 0; i < cards.length; i++) {
+        for (int i = cards.length-1; i > 0; i--) {
             if (cards[i] != -1) {
                 out = cards[i];
                 cards[i] = -1;
+                numCards--;
                 return out;
             }
         }
         return out;
     }
 
-    public String toAString(int[] deck) {
-        int cnt = 0;
-        for (int j : deck) {
-            if (j == -1)
-                cnt++;
+    public String toString() {
+        String out = "";
+        for (int i = numCards-1; i > 0; i--) {
+            out += cardToString(cards[i]) + " ";
         }
-        String out[] = new String[deck.length - cnt - 1];
-        for (int i = 0; i < out.length; i++) {
-            if (deck[i] == -1)
-                continue;
-            else
-                out[i] = toString(deck[i]);
-        }
-        return Arrays.toString(out);
+        return out;
     }
-    public static String toString(int num) {
+
+    public static String cardToString(int num) {
         String out = Integer.toString(num % 13);
         // adding exceptions for cards that are not numbers
         if (out.equals("1"))
@@ -133,6 +138,15 @@ class Deck {
         else
             out += "♠";
         return out;
+    }
+    public static int cardToValue(int num) {
+        int out = num % 13;
+        if (out == 0 || out == 11 || out == 12)
+            return 10;
+        else if (out == 1)
+            return 11;
+        else
+            return out;
     }
 
 }
