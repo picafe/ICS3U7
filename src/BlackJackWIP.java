@@ -1,23 +1,34 @@
 import java.io.*;
 import java.util.*;
 public class BlackJackWIP {
+
+    static Scanner sc = new Scanner(System.in);
+    static Deck deck = new Deck();
+    static Player player = new Player(Game.askName());
+    static Dealer dealer = new Dealer();
     public static void main(String[] args) throws Exception {
-        Deck deck = new Deck();
-        Player bob = new Player("Bob");
+
+
         deck.loadCards();
-        System.out.println(deck);
 
+        System.out.println(deck);
         deck.shuffleCards();
+        System.out.println(deck);
+
+
 
         System.out.println(deck);
-        bob.getCard(deck.dealCard());
-        bob.getCard(deck.dealCard());
-        bob.getCard(deck.dealCard());
 
-        System.out.println(bob);
+    }
+    public static void playerDecision() {
+        System.out.println("hit or stand?");
+        char decision = Character.toLowerCase(sc.next().charAt(0));
+        if (decision == 'h') {
+            player.getCard(deck.dealCard());
+        }
+        //need to finish
 
-        System.out.println(deck.toString());
-        System.out.println(Jokes.nextJoke());
+
 
     }
 }
@@ -44,7 +55,9 @@ class Player {
         if (total > 21 && aces == 1)
             total -= 10;
         else if (total > 21 && aces == 2) {
-            total -= 20;
+            total -= 10;
+            if (total > 21)
+                total -= 10;
         }
         return total;
     }
@@ -58,19 +71,39 @@ class Player {
     }
 
     public String toString() {
-        return name + "'s Hand:   " + getHands() + "\tsum: " + getTotal();
+        return name + "'s Hand:   " + getHands() + "\t\tSum: " + getTotal();
     }
-
-class Dealer extends Player {
-
-    public Dealer(String theName) {
-        super(theName);
-    }
-
 }
 
+    class Dealer extends Player {
+    private ArrayList<Integer> cards = new ArrayList<Integer>();
+    private String name;
 
-}
+     public Dealer() {
+         super("Dealer");
+         name = "Dealer";
+     }
+
+     public String toString() {
+         String showSum = "";
+         if (getTotal() > 10) {
+             showSum = "> 10";
+         } else {
+             showSum = "< 10";
+         }
+
+         return name + "'s Hand:   " + getHands().substring(0, 2) + " ?\t\tSum: " + showSum;
+     }
+
+    public boolean Decision() {
+        return getTotal() <= 18;
+    }
+
+
+ }
+
+
+
 class Deck {
     private int cards[];
     private int numCards = 52;
@@ -81,6 +114,7 @@ class Deck {
         }
     }
 
+    //debugging, remove later
     public int[] getCards() {
         return cards;
     }
@@ -148,6 +182,32 @@ class Deck {
         else
             return out;
     }
+
+}
+
+class Game {
+    private static Scanner sc = new Scanner(System.in);
+    public static void gameOver(char whichPlayerLost) throws Exception {
+
+        if (whichPlayerLost == 'p') {
+            System.out.println("Player says: " + Jokes.nextJoke());
+            System.out.println("---------------");
+            System.out.println("You Went Over 21 and Busted!");
+            System.out.println("You **Lost** this Round!");
+        }
+        else {
+            System.out.println("Dealer says: " + Jokes.nextJoke());
+            System.out.println("---------------");
+            System.out.println("The Dealer Went Over 21 and Busted!");
+            System.out.println("You **Won** this Round!");
+        }
+    }
+    public static String askName() {
+        System.out.println("What is your name?");
+        return sc.nextLine();
+    }
+
+
 
 }
 
