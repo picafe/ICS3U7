@@ -20,7 +20,6 @@ public class BlackJack {
 
 
         while (isPlaying) {
-
             System.out.println(deck.getNumCards());
             while (roundPlaying) {
                 System.out.println(deck);
@@ -181,7 +180,7 @@ class Dealer extends Player {
      }
 
      public String toHiddenString() {
-         String showSum = "";
+         String showSum;
          if (getTotal() > 10) {
              showSum = "> 10";
          } else {
@@ -212,11 +211,12 @@ Program: Deck Class for BlackJack Project
  */
 class Deck {
     private int cards[];
-    private int numCards = 52;
+    private int numCards;
     public void loadCards() {
         cards = new int[52];
         for (int i = 0; i < 52; i++)
             cards[i] = i;
+        numCards = 52;
     }
 
     public int getNumCards() {
@@ -298,7 +298,7 @@ class Jokes {
     private static ArrayList<String> jokes = new ArrayList<String>();
 
     public static void loadJokes() throws Exception {
-        String tmp = "";
+        String tmp;
         Scanner scFile = new Scanner(new File("C:\\Users\\Surya\\IdeaProjects\\ICS3U7\\src\\jokes.txt"));
         //reading all the jokes in the file (separated by newline)
         while (scFile.hasNext()) {
