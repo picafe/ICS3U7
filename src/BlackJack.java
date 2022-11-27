@@ -21,7 +21,7 @@ public class BlackJack {
         while (gamePlaying) {
             while (roundPlaying) {
                 System.out.println(deck);
-                Decision();
+                decision();
             }
             if (deck.getNumCards() - 1 < 10) {
                 deck.loadCards();
@@ -34,13 +34,13 @@ public class BlackJack {
         System.out.println("What is your name?");
         return sc.nextLine();
     }
-    public static void Decision() throws Exception {
-        if (dealer.Decision()) {
+    public static void decision() throws Exception {
+        if (dealer.decision()) {
             whoWon();
             roundPlaying = false;
             return;
         }
-        System.out.println("hit or stand?");
+        System.out.println("hit or stand? [h/s] ");
         char decision = Character.toLowerCase(sc.next().charAt(0));
         if (decision == 's') {
             whoWon();
@@ -49,22 +49,22 @@ public class BlackJack {
         else {
             player.getCard(deck.dealCard());
             dealer.getCard(deck.dealCard());
-            Results();
+            results();
         }
     }
 
-    public static void Results() {
+    public static void results() {
         System.out.println(player.toString() + "\n\n" + dealer.toHiddenString());
     }
 
     public static void whoWon() throws Exception {
         char winner = ' ';
         System.out.println(player.toString() + "\n\n" + dealer.toString());
-        if (player.getTotal() <= 21 && player.getTotal() <= 21 && player.getTotal() > dealer.getTotal()) {
+        if (player.getTotal() <= 21 && dealer.getTotal() <= 21 && player.getTotal() > dealer.getTotal()) {
             System.out.println("You won!");
             winner = 'p';
         }
-        else if (player.getTotal() <= 21 && player.getTotal() <= 21 && player.getTotal() < dealer.getTotal()) {
+        else if (player.getTotal() <= 21 && dealer.getTotal() <= 21 && player.getTotal() < dealer.getTotal()) {
             System.out.println("You lost!");
             winner = 'd';
         }
@@ -191,7 +191,7 @@ class Dealer extends Player {
         return super.toString();
     }
 
-    public boolean Decision() {
+    public boolean decision() {
         if (getTotal() >= 18) {
             System.out.println("**Dealer Stands**");
             return true;
