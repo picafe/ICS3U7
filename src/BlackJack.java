@@ -6,20 +6,19 @@ Date: Nov.26, 2022
 Program: Main Class for BlackJack Project
  */
 public class BlackJack {
-
     static Scanner sc = new Scanner(System.in);
     static Deck deck = new Deck();
     static Player player = new Player(askName());
     static Dealer dealer = new Dealer();
     static boolean roundPlaying = true;
+
     public static void main(String[] args) throws Exception {
-        boolean isPlaying = true;
+        boolean gamePlaying = true;
         deck.loadCards();
         System.out.println(deck);
         deck.shuffleCards();
 
-
-        while (isPlaying) {
+        while (gamePlaying) {
             while (roundPlaying) {
                 System.out.println(deck);
                 Decision();
@@ -28,7 +27,7 @@ public class BlackJack {
                 deck.loadCards();
                 deck.shuffleCards();
             }
-            isPlaying = playAgain();
+            gamePlaying = playAgain();
         }
     }
     public static String askName() {
@@ -172,25 +171,25 @@ class Dealer extends Player {
     private ArrayList<Integer> cards = new ArrayList<Integer>();
     private String name;
 
-     public Dealer() {
-         super("Dealer");
-         name = "Dealer";
-     }
+    public Dealer() {
+        super("Dealer");
+        name = "Dealer";
+    }
 
-     public String toHiddenString() {
-         String showSum;
-         if (getTotal() > 10) {
-             showSum = "> 10";
-         } else {
-             showSum = "< 10";
-         }
+    public String toHiddenString() {
+        String showSum;
+        if (getTotal() > 10) {
+            showSum = "> 10";
+        } else {
+            showSum = "< 10";
+        }
 
-         return name + "'s Hand:   " + getHands().substring(0, 2) + " ?\t\tSum: " + showSum;
-     }
+        return name + "'s Hand:   " + getHands().substring(0, 2) + " ?\t\tSum: " + showSum;
+    }
 
-     public String toString() {
-         return super.toString();
-     }
+    public String toString() {
+        return super.toString();
+    }
 
     public boolean Decision() {
         if (getTotal() >= 18) {
@@ -199,7 +198,7 @@ class Dealer extends Player {
         }
         return false;
     }
- }
+}
 
 
 /*Name: Surya T
