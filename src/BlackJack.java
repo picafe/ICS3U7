@@ -20,7 +20,6 @@ public class BlackJack {
 
 
         while (isPlaying) {
-            System.out.println(deck.getNumCards());
             while (roundPlaying) {
                 System.out.println(deck);
                 Decision();
@@ -30,7 +29,6 @@ public class BlackJack {
                 deck.shuffleCards();
             }
             isPlaying = playAgain();
-
         }
     }
     public static String askName() {
@@ -311,7 +309,7 @@ class Jokes {
         String out;
         if (jokes.isEmpty())
             loadJokes();
-        int rnd = (int) (Math.random()* jokes.size());
+        int rnd = (int) (Math.random() * jokes.size());
         out = jokes.get(rnd);
         jokes.remove(rnd);
         return out;
