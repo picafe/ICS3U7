@@ -1,48 +1,139 @@
 import java.io.*;
 import java.util.*;
-public class BlackJackWIP {
+/*Name: Surya T
+Class: ICS3U7
+Date: Nov.26, 2022
+Program: Main Class for BlackJack Project
+ */
+public class BlackJack {
 
     static Scanner sc = new Scanner(System.in);
     static Deck deck = new Deck();
-    static Player player = new Player(Game.askName());
+    static Player player = new Player(askName());
     static Dealer dealer = new Dealer();
+    static boolean roundPlaying = true;
     public static void main(String[] args) throws Exception {
-
-
+        boolean isPlaying = true;
         deck.loadCards();
-
         System.out.println(deck);
         deck.shuffleCards();
-        System.out.println(deck);
 
 
+        while (isPlaying) {
 
-        System.out.println(deck);
+            System.out.println(deck.getNumCards());
+            while (roundPlaying) {
+                System.out.println(deck);
+                Decision();
+            }
+            if (deck.getNumCards() - 1 < 10) {
+                deck.loadCards();
+                deck.shuffleCards();
+            }
+            isPlaying = playAgain();
 
+        }
     }
-    public static void playerDecision() {
+    public static String askName() {
+        System.out.println("What is your name?");
+        return sc.nextLine();
+    }
+    public static void Decision() throws Exception {
+        if (dealer.Decision()) {
+            whoWon();
+            roundPlaying = false;
+            return;
+        }
         System.out.println("hit or stand?");
         char decision = Character.toLowerCase(sc.next().charAt(0));
-        if (decision == 'h') {
-            player.getCard(deck.dealCard());
+        if (decision == 's') {
+            whoWon();
+            roundPlaying = false;
         }
-        //need to finish
+        else {
+            player.getCard(deck.dealCard());
+            dealer.getCard(deck.dealCard());
+            Results();
+        }
+    }
 
+    public static void Results() {
+        System.out.println(player.toString() + "\n\n" + dealer.toHiddenString());
+    }
 
+    public static void whoWon() throws Exception {
+        char winner = ' ';
+        System.out.println(player.toString() + "\n\n" + dealer.toString());
+        if (player.getTotal() <= 21 && player.getTotal() <= 21 && player.getTotal() > dealer.getTotal()) {
+            System.out.println("You won!");
+            winner = 'p';
+        }
+        else if (player.getTotal() <= 21 && player.getTotal() <= 21 && player.getTotal() < dealer.getTotal()) {
+            System.out.println("You lost!");
+            winner = 'd';
+        }
+        else if (player.getTotal() > 21 && dealer.getTotal() > 21) {
+            System.out.println("Both bust, **dealer wins**!");
+            winner = 'd';
+        }
+        else if (dealer.getTotal() > 21) {
+            System.out.println("Dealer bust, **you won**!");
+            winner = 'p';
+        }
+        else if (player.getTotal() > 21) {
+            System.out.println("You bust and **lost**!");
+            winner = 'd';
+        }
+        else if (player.getTotal() == dealer.getTotal()) {
+            System.out.println("Tie, **dealer wins**!");
+            winner = 'd';
+        }
+        else
+            System.out.println("something weird happened!");
 
+        if (winner == 'p')
+            System.out.println(player.getName() + " says: " + Jokes.nextJoke());
+        else
+            System.out.println(dealer.getName() + " says: " + Jokes.nextJoke());
+    }
+
+    public static boolean playAgain() {
+        player.clearCards();
+        dealer.clearCards();
+        System.out.print("would you like to play again? [y/n] ");
+        char decision = Character.toLowerCase(sc.next().charAt(0));
+        //will play again if y is entered, if not, it will exit
+        if (decision == 'y') {
+            roundPlaying = true;
+            return true;
+        }
+        return false;
     }
 }
 
+/*Name: Surya T
+Class: ICS3U7
+Date: Nov.26, 2022
+Program: Player Class for BlackJack Project
+ */
 class Player {
     private ArrayList<Integer> cards = new ArrayList<Integer>();
     private String name;
 
-    public Player(String theName) {
-        name = theName;
+    public Player(String name) {
+        this.name = name;
     }
 
     public void getCard(int card) {
         cards.add(card);
+    }
+
+    public void clearCards() {
+        cards.clear();
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getTotal() {
@@ -75,7 +166,12 @@ class Player {
     }
 }
 
-    class Dealer extends Player {
+/*Name: Surya T
+Class: ICS3U7
+Date: Nov.26, 2022
+Program: Dealer Class for BlackJack Project
+ */
+class Dealer extends Player {
     private ArrayList<Integer> cards = new ArrayList<Integer>();
     private String name;
 
@@ -84,7 +180,7 @@ class Player {
          name = "Dealer";
      }
 
-     public String toString() {
+     public String toHiddenString() {
          String showSum = "";
          if (getTotal() > 10) {
              showSum = "> 10";
@@ -95,28 +191,36 @@ class Player {
          return name + "'s Hand:   " + getHands().substring(0, 2) + " ?\t\tSum: " + showSum;
      }
 
+     public String toString() {
+         return super.toString();
+     }
+
     public boolean Decision() {
-        return getTotal() <= 18;
+        if (getTotal() >= 18) {
+            System.out.println("**Dealer Stands**");
+            return true;
+        }
+        return false;
     }
-
-
  }
 
 
-
+/*Name: Surya T
+Class: ICS3U7
+Date: Nov.26, 2022
+Program: Deck Class for BlackJack Project
+ */
 class Deck {
     private int cards[];
     private int numCards = 52;
     public void loadCards() {
         cards = new int[52];
-        for (int i = 0; i < 52; i++) {
+        for (int i = 0; i < 52; i++)
             cards[i] = i;
-        }
     }
 
-    //debugging, remove later
-    public int[] getCards() {
-        return cards;
+    public int getNumCards() {
+        return numCards;
     }
 
     public void shuffleCards() {
@@ -184,33 +288,11 @@ class Deck {
     }
 
 }
-
-class Game {
-    private static Scanner sc = new Scanner(System.in);
-    public static void gameOver(char whichPlayerLost) throws Exception {
-
-        if (whichPlayerLost == 'p') {
-            System.out.println("Player says: " + Jokes.nextJoke());
-            System.out.println("---------------");
-            System.out.println("You Went Over 21 and Busted!");
-            System.out.println("You **Lost** this Round!");
-        }
-        else {
-            System.out.println("Dealer says: " + Jokes.nextJoke());
-            System.out.println("---------------");
-            System.out.println("The Dealer Went Over 21 and Busted!");
-            System.out.println("You **Won** this Round!");
-        }
-    }
-    public static String askName() {
-        System.out.println("What is your name?");
-        return sc.nextLine();
-    }
-
-
-
-}
-
+/*Name: Surya T
+Class: ICS3U7
+Date: Nov.26, 2022
+Program: Jokes Class for BlackJack Project
+ */
 class Jokes {
 
     private static ArrayList<String> jokes = new ArrayList<String>();
